@@ -225,7 +225,7 @@ module Miasma
 
         # @return [HTTP] with auth token provided
         def connection
-          super.with_headers('X-Auth-Token' => token)
+          super.headers('X-Auth-Token' => token)
         end
 
         # @return [String] endpoint URL
