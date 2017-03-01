@@ -116,7 +116,7 @@ module Miasma
 
         end
 
-        # Authentication implementation compatible for v2
+        # Authentication implementation compatible for v3
         class Version3 < Authenticate
 
           # @return [Smash] authentication request body
@@ -155,17 +155,13 @@ module Miasma
                 )
               )
             else
-              if(credentials[:open_stack_domain])
+              if(credentials[:open_stack_domain] and credentials[:open_stack_project])
                 scope = Smash.new(
-                  :domain => Smash.new(
-                    :name => credentials[:open_stack_domain]
+                  :project => Smash.new(
+                    :name => credentials[:open_stack_project],
+                    :domain => { :name => credentials[:open_stack_domain] }
                   )
                 )
-                if(credentials[:open_stack_project])
-                  scope[:project] = Smash.new(
-                    :name => credentials[:open_stack_project]
-                  )
-                end
               end
             end
             auth = Smash.new(:identity => ident)
@@ -186,7 +182,7 @@ module Miasma
                 :auth => authentication_request
               )
             )
-            unless(result.status == 200)
+            unless(result.status == 200 or result.status == 201)
               raise Error::ApiError::AuthenticationError.new('Failed to authenticate!', result)
             end
             info = MultiJson.load(result.body.to_s).to_smash[:token]
