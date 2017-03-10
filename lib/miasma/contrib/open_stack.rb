@@ -143,7 +143,7 @@ module Miasma
             if(credentials[:open_stack_token])
               ident[:methods] << 'token'
               ident[:token] = Smash.new(
-                  :id => credentials[:open_stack_token]
+                :id => credentials[:open_stack_token]
               )
             end
             if(credentials[:open_stack_project_id])
